@@ -7,7 +7,6 @@ use ApiPlatform\Core\Bridge\Symfony\Bundle\Test\Response;
 use App\Entity\TodoList;
 use App\Tests\TestUtilitiesTrait;
 use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class TodoListTest extends ApiTestCase
 {
@@ -19,6 +18,13 @@ class TodoListTest extends ApiTestCase
         'title'       => 'First todo',
         'description' => 'First todo long description long description long description long description...',
         'owner_path'  => '/api/users/'
+    ];
+    const TASKS = [
+        ['title' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'],
+        ['title' => 'Dolore magna aliqua. Ut enim ad minim veniam, quis nostrud'],
+        ['title' => 'Ullamco laboris nisi ut aliquip ex ea commodo consequat'],
+        ['title' => 'Duis aute irure dolor in reprehenderit in voluptate'],
+        ['title' => 'Excepteur sint occaecat cupidatat non proident'],
     ];
     
     public function testPostTodoList(): void
@@ -60,6 +66,31 @@ class TodoListTest extends ApiTestCase
             'title' => self::TODO['title'],
             'description' => self::TODO['description'],
         ]);
+    }
+    
+    public function testPostTodoListWithTasks(): void
+    {
+        $client = self::createClient();
+
+        list($user, $token) = $this->createUserAndGetJWToken($client);
+
+        $response = $client->request('POST', '/api/todos', [
+            'auth_bearer' => $token,
+            'json' => [
+                'title'       => self::TODO['title'],
+                'description' => self::TODO['description'],
+                'owner'       => self::TODO['owner_path'].$user->getId(),
+                'tasks'       => self::TASKS,
+            ]
+        ]);
+        $this->assertResponseStatusCodeSame(201, 'Create TodoList.');
+
+        $responseTasks = array_map(function ($task)
+        {
+            return ['title' => $task['title']];
+        }, $response->toArray()['tasks']);
+
+        $this->assertSame($responseTasks, self::TASKS);
     }
 
     private function createUserAndGetJWToken($client): array

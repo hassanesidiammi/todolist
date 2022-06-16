@@ -7,12 +7,15 @@ use App\Repository\TodoListRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=TodoListRepository::class)
- * 
+ *
  * @ApiResource(
- *  shortName="Todo"
+ *     shortName="Todo",
+ *     normalizationContext={"groups"={"todo:read"}},
+ *     denormalizationContext={"groups"={"todo:write"}},
  * )
  */
 class TodoList
@@ -21,27 +24,37 @@ class TodoList
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     *
+     * @Groups({"todo:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
+     *
+     * @Groups({"todo:read", "todo:write"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     *
+     * @Groups({"todo:read", "todo:write"})
      */
     private $description;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="todos")
      * @ORM\JoinColumn(nullable=false)
+     *
+     * @Groups({"todo:read", "todo:write"})
      */
     private $owner;
 
     /**
-     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="todoList")
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="todoList", orphanRemoval=true, cascade={"persist"})
+     *
+     * @Groups({"todo:read", "todo:write"})
      */
     private $tasks;
 
