@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
+use App\Entity\TodoList;
 use App\Entity\User;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 trait TestUtilitiesTrait
@@ -20,7 +20,7 @@ trait TestUtilitiesTrait
         return $this->get('doctrine')->getManager();
     }
 
-    protected function save($entity): User
+    protected function save($entity)
     {
         $em = $this->getEntityManager();
         $em->persist($entity);
@@ -50,5 +50,23 @@ trait TestUtilitiesTrait
         $user->setPassword($password);
 
         return $this->save($user);
+    }
+
+    protected function createTodoListInDB($title, $description, $owner)
+    {
+        $todo = new TodoList;
+        $todo->setTitle($title);
+        $todo->setDescription($description);
+        $todo->setOwner($owner);
+
+        return $this->save($todo);
+    }
+
+    protected function createUserAndJWToken($client, $email, $username, $password): array
+    {
+        $user  = $this->createUserInDB($email, $username, $password);
+        $token = $this->logIn($client, $email, $password);
+
+        return [$user, $token];
     }
 }
