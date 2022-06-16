@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -57,6 +59,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"user:write"})
      */
     private $plainPassword;
+
+    /**
+     * @ORM\OneToMany(targetEntity=TodoList::class, mappedBy="owner")
+     */
+    private $todos;
+
+    public function __construct()
+    {
+        $this->todos = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -158,6 +170,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPlainPassword(string $plainPassword): self
     {
         $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TodoList>
+     */
+    public function getTodos(): Collection
+    {
+        return $this->todos;
+    }
+
+    public function addTodo(TodoList $todo): self
+    {
+        if (!$this->todos->contains($todo)) {
+            $this->todos[] = $todo;
+            $todo->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTodo(TodoList $todo): self
+    {
+        if ($this->todos->removeElement($todo)) {
+            // set the owning side to null (unless already changed)
+            if ($todo->getOwner() === $this) {
+                $todo->setOwner(null);
+            }
+        }
 
         return $this;
     }
