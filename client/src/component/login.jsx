@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import Form from "react-bootstrap/Form";
 import { FilePerson } from "react-bootstrap-icons";
+import { login } from "../utils/api";
 
 const Login = () => {
   let navigate = useNavigate();
@@ -27,7 +28,25 @@ const Login = () => {
   const handleLogin = (e) => {
     e.preventDefault();
     setMessage("");
-    setLoading(true);    
+    setLoading(true);
+
+    login(username, password).then(
+      () => {
+        navigate("/todos");
+        // window.location.reload();
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+        setLoading(false);
+        setSuccessful(false);
+        setMessage(resMessage);
+      }
+    );
   };
 
   return (

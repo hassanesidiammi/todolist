@@ -1,8 +1,5 @@
 import { Navigate } from "react-router-dom";
-
-export const getCurrentUser = () => {
-  return JSON.parse(localStorage.getItem("user"));
-};
+import { getCurrentUser } from "../services/auth.service";
 
 const Protected = ({ children }) => {
   if (!getCurrentUser()) {
