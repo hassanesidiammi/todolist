@@ -16,7 +16,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
  *     denormalizationContext={"groups"={"task:write"}},
  *     itemOperations={
  *         "get",
- *         "put",
+ *         "put"={"security"="object.getOwner() == user"},
  *         "delete"={"security"="object.getOwner() == user"},
  *     }
  * )

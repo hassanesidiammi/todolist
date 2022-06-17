@@ -94,7 +94,7 @@ class TodoListTest extends ApiTestCase
         $this->assertSame($responseTasks, self::TASKS);
     }
 
-    public function testOnlyOwnerCanDelete(): void
+    public function testOnlyOwnerCanModifyOrDelete(): void
     {
         $client = self::createClient();
 
@@ -114,6 +114,24 @@ class TodoListTest extends ApiTestCase
         ]);
         $this->assertResponseStatusCodeSame(200, 'Show not owner TodoList.');
 
+        // Test PUT
+        $client->request('PUT', '/api/tasks/'.$todo->getTasks()->first()->getId(), [
+            'auth_bearer' => $token2,
+            'json' => [
+                'title' => 'modified'
+            ]
+        ]);
+        $this->assertResponseStatusCodeSame(403, 'Cannot mofy not owned Task.');
+
+        $client->request('PUT', '/api/todos/'.$todo->getId(), [
+            'auth_bearer' => $token2,
+            'json' => [
+                'title' => 'modified'
+            ]
+        ]);
+        $this->assertResponseStatusCodeSame(403, 'Cannot delete not owned TodoList.');
+    
+        // test delete
         $client->request('DELETE', '/api/tasks/'.$todo->getTasks()->first()->getId(), [
             'auth_bearer' => $token2,
         ]);
@@ -122,7 +140,7 @@ class TodoListTest extends ApiTestCase
         $client->request('DELETE', '/api/todos/'.$todo->getId(), [
             'auth_bearer' => $token2,
         ]);
-        $this->assertResponseStatusCodeSame(403, 'Cannot delete not owned TodoList.');
+        $this->assertResponseStatusCodeSame(403, 'Can delete not owned TodoList.');
 
     }
 

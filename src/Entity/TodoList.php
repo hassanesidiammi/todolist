@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     denormalizationContext={"groups"={"todo:write"}},
  *     itemOperations={
  *         "get",
- *         "put",
+ *         "put"={"security"="object.getOwner() == user"},
  *         "delete"={"security"="object.getOwner() == user"},
  *     }
  * )
