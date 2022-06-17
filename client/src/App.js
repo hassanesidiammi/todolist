@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
 
@@ -9,14 +10,17 @@ import Todo from './component/todo';
 import Todos from './component/todos';
 
 function App() {
+  const [todo, setTodo] = useState([]);
+  const [todos, setTodos] = useState([]);
+
   return (
     <BrowserRouter >
         <Nave />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Protected><Loading /></Protected>} />
-          <Route path="/todos" element={<Protected><Todos /></Protected>} />
-          <Route path="/todos/:todoId" element={<Protected><Todo /></Protected>} />
+          <Route path="/todos" element={<Protected><Todos todos={todos} setTodos={setTodos} /></Protected>} />
+          <Route path="/todos/:todoId" element={<Protected><Todo setTodo={setTodo} todo={todo} /></Protected>} />
         </Routes>
       </BrowserRouter>
   );
