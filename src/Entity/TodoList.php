@@ -16,6 +16,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     shortName="Todo",
  *     normalizationContext={"groups"={"todo:read"}},
  *     denormalizationContext={"groups"={"todo:write"}},
+ *     itemOperations={
+ *         "get",
+ *         "put",
+ *         "delete"={"security"="object.getOwner() == user"},
+ *     }
  * )
  */
 class TodoList

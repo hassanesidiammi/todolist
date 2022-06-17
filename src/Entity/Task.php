@@ -14,6 +14,11 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
  * @ApiResource(
  *     normalizationContext={"groups"={"task:read"}},
  *     denormalizationContext={"groups"={"task:write"}},
+ *     itemOperations={
+ *         "get",
+ *         "put",
+ *         "delete"={"security"="object.getOwner() == user"},
+ *     }
  * )
  */
 class Task

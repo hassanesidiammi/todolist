@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
+use App\Entity\Task;
 use App\Entity\TodoList;
 use App\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -52,12 +53,20 @@ trait TestUtilitiesTrait
         return $this->save($user);
     }
 
-    protected function createTodoListInDB($title, $description, $owner)
+    protected function createTodoListInDB($title, $description, $owner, $tasks=null)
     {
         $todo = new TodoList;
         $todo->setTitle($title);
         $todo->setDescription($description);
         $todo->setOwner($owner);
+
+        if($tasks){
+            foreach ($tasks as $item) {
+                $task = new Task;
+                $task->setTitle($item['title']);
+                $todo->addTask($task);
+            }
+        }
 
         return $this->save($todo);
     }

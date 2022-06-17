@@ -14,6 +14,7 @@ class TodoListTest extends ApiTestCase
     use TestUtilitiesTrait;
 
     const USER = ['email' => 'test@foo.com', 'username' => 'test', 'password' => 'bar'];
+    const USER_2 = ['email' => 'test2@foo.com', 'username' => 'test2', 'password' => 'bar'];
     const TODO = [
         'title'       => 'First todo',
         'description' => 'First todo long description long description long description long description...',
@@ -93,13 +94,45 @@ class TodoListTest extends ApiTestCase
         $this->assertSame($responseTasks, self::TASKS);
     }
 
-    private function createUserAndGetJWToken($client): array
+    public function testOnlyOwnerCanDelete(): void
     {
-        return $this->createUserAndJWToken($client, self::USER['email'], self::USER['username'], self::USER['password']);
+        $client = self::createClient();
+
+        list($user1, $token1) = $this->createUserAndGetJWToken($client);
+        $todo = $this->createTodoList(self::TODO['title'], self::TODO['description'], $user1, self::TASKS);
+
+        $token2 = $this->createUserAndGetJWToken($client, self::USER_2['email'], self::USER_2['username'], self::USER_2['password'])[1];
+
+        // owner can see his todos
+        $client->request('GET', '/api/todos/'.$todo->getId(), [
+            'auth_bearer' => $token1,
+        ]);
+        $this->assertResponseStatusCodeSame(200, 'Show Owner TodoList.');
+
+        $client->request('GET', '/api/todos/'.$todo->getId(), [
+            'auth_bearer' => $token2,
+        ]);
+        $this->assertResponseStatusCodeSame(200, 'Show not owner TodoList.');
+
+        $client->request('DELETE', '/api/tasks/'.$todo->getTasks()->first()->getId(), [
+            'auth_bearer' => $token2,
+        ]);
+        $this->assertResponseStatusCodeSame(403, 'Cannot delete not owned Task.');
+
+        $client->request('DELETE', '/api/todos/'.$todo->getId(), [
+            'auth_bearer' => $token2,
+        ]);
+        $this->assertResponseStatusCodeSame(403, 'Cannot delete not owned TodoList.');
+
     }
 
-    private function createTodoList($title, $description, $user): TodoList
+    private function createUserAndGetJWToken($client, $email=self::USER['email'], $username=self::USER['username'], $password=self::USER['password']): array
     {
-        return $this->createTodoListInDB($title, $description, $user);
+        return $this->createUserAndJWToken($client, $email, $username, $password);
+    }
+
+    private function createTodoList($title, $description, $user, $tasks=null): TodoList
+    {
+        return $this->createTodoListInDB($title, $description, $user, $tasks);
     }
 }
