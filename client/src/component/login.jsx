@@ -33,7 +33,7 @@ const Login = () => {
     login(username, password).then(
       () => {
         navigate("/todos");
-        // window.location.reload();
+        window.location.reload();
       },
       (error) => {
         const resMessage =
