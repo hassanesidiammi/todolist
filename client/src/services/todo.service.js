@@ -12,7 +12,7 @@ class TodoService {
   }
 
   get(id, setTodo) {
-    api.get('/todos/' + id).then(response => {
+    return api.get('/todos/' + id).then(response => {
       setTodo(response.data)
     });
   }

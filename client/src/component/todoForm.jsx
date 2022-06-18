@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { ListTask } from "react-bootstrap-icons";
 import Form from "react-bootstrap/Form";
 import api from "../utils/api";
@@ -6,9 +6,11 @@ import api from "../utils/api";
 const TodoForm = (props) => {
   const form = useRef();
 
-  const [title, setTitle] = useState();
+  const [title, setTitle] = useState(props?.todo?.title);
   const [errorTitle, setErrorTitle] = useState();
-  const [description, setDescription] = useState();
+  const [description, setDescription] = useState(props?.todo?.description);
+  const [tasks, setTasks] = useState((props?.todo?.tasks && props?.todo?.tasks.length) ? props.todo.tasks : []);
+  const [newTasks, setNewTasks] = useState([]);
 
   const [loading, setLoading] = useState(false);
   const [successful, setSuccessful] = useState(false);
@@ -16,6 +18,32 @@ const TodoForm = (props) => {
 
   const onChangeTitle = (e) => {
     setTitle(e.target.value);
+  };
+
+  const onChangeTask = (e, id) => {
+    // @TODO: need it ???
+    let tks = [...tasks];
+    tks = tks.map((tk) => {
+      if (tk.id === id){
+        tk.title = e.target.value
+      }
+
+      return tk;
+    })
+
+    setTasks(tks);
+  };
+
+  const onChangeNewTask = (e, id) => {
+    // @TODO: need it ???
+    let tks = [...newTasks];
+    tks = tks.map((tk) => {
+      if (tk.id === id){
+        tk.title = e.target.value
+      }
+
+      return tk;
+    })
   };
 
   const onChangeDescription = (e) => {
@@ -29,11 +57,56 @@ const TodoForm = (props) => {
     setErrorTitle('');
     setLoading(true);
 
+    
+    let mergedTasks = [].concat(
+      newTasks.map((task) => {return {title: task.title}}),
+      tasks.map((task) => {return {id: '/api/tasks/' + task.id, title: task.title}}),
+    )
+    ;
+  
+    (props.todo && props.todo.id) &&
+
+    
+
+    api.put(
+      'todos/' + props.todo.id,
+      {
+        "title": title,
+        "description": description,
+        "tasks": mergedTasks
+      }
+    ).then(
+      () => {
+        window.location.reload();
+      },
+      (error) => {
+        const resMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
+
+        const violations = error.response && error.response.data && error.response.data.violations;
+        if ((violations)) {
+          violations.map((violation) => {
+            if ('title' === violation.propertyPath) {
+              setErrorTitle(violation.message);
+            }
+          })
+        }
+
+        setLoading(false);
+        setSuccessful(false);
+        setMessage(resMessage);
+      }
+    ) ||
     api.post(
       'todos',
       {
         "title": title,
-        "description": description
+        "description": description,
+        "tasks": mergedTasks
       }
     ).then(
       () => {
@@ -84,7 +157,7 @@ const TodoForm = (props) => {
                 className={`form-control${errorTitle ? " is-invalid" : ""}`}
                 name="title"
                 autoFocus
-                value={title}
+                defaultValue={title}
                 onChange={onChangeTitle}
                 required
               />
@@ -103,26 +176,71 @@ const TodoForm = (props) => {
               className="form-control"
               name="description"
 
-              value={description}
+              defaultValue={description}
               onChange={onChangeDescription}
             />
           </div>
         </div>
+        
+        <div className="h6 mt-4 mb-3 mpx-1">Tasks</div>
+            <ul className="list-group">
+              {
+                tasks.map((task, i) => <li className="list-group-item" key={i+1} >
+                  <input
+                    type="text"
+                    name="tasks[]"
+                    defaultValue={task.title}
+                    onChange={(e) => onChangeTask(e, task.id)}
+                    required
+                  />
+                </li>)
+              }
 
-        <div className="p-3 row">
+              {
+                newTasks.map((task, i) => <li className="list-group-item" key={'new_' + i} >
+                  <input
+                    type="text"
+                    name="tasks[]"
+                    defaultValue={task.title}
+                    id={'new_' + i}
+                    onBlur={(e) => onChangeNewTask(e, 'new_' + i)}
+                    required
+                  />
+                </li>)
+              }
+            </ul>
+            <div className="my-3 mx-1">
               <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button
-                  className="btn btn-primary me-md-2"
-                  disabled={loading}
-                  type="submit"
-                >
-                  <span>Save</span>
-                  {loading && (
-                    <>&nbsp;&nbsp;<span className="spinner-border spinner-border-sm"></span></>
-                  )}
-                </button>
+                <a
+                  className="btn btn-sm btn-success me-md-2"
+                  onClick={() => {
+                    let newest = [...newTasks, {title: '', id: 'new_' + newTasks.length}];
+                    setNewTasks(newest) }
+                  }
+                >Add Task</a>
               </div>
             </div>
+
+        <div className="py-3 row">
+          <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+            {props.cancel ?
+              <a className="btn btn-warning me-md-2" onClick={props.cancel}>
+                <span>Cancel</span>
+              </a> :
+              ''
+            }
+            <button
+              className="btn btn-primary me-md-2"
+              disabled={loading}
+              type="submit"
+            >
+              <span>Save</span>
+              {loading && (
+                <>&nbsp;&nbsp;<span className="spinner-border spinner-border-sm"></span></>
+              )}
+            </button>
+          </div>
+        </div>
       </Form>
     </div>
 

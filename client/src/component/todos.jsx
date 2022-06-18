@@ -33,7 +33,7 @@ const Todos = (props) => {
               <div className="col-sm-12">{
                 addTodo ?
                   <div className="alert alert-info alert-dismissible fade show" role="alert">
-                    <TodoForm />
+                    <TodoForm cancel={toggleAdd} />
                     <button type="button" className="btn-close" onClick={toggleAdd} ></button>
                   </div>
                  :
