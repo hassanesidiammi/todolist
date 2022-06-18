@@ -14,11 +14,16 @@ const Todo = (props) => {
     todoService.get(params.todoId,  setTodo)
   }, []);
 
+  const handleCancel = () => {
+    // todoService.get(params.todoId,  setTodo);
+    setModify(false);
+  }
+
   return (
     <div className="container m-3">
       {
         todo ? (
-          modify ? <TodoForm todo={todo} cancel={() => setModify(false) } /> : (
+          modify ? <TodoForm todo={todo} cancel={handleCancel} /> : (
             <div className="offset-sm-1 col-sm-10">
               <div className="h3 text-center">#{todo.id} {todo.title}</div>
               <p className="">{todo.description}</p>{

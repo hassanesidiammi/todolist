@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { ListTask } from "react-bootstrap-icons";
 import Form from "react-bootstrap/Form";
 import api from "../utils/api";
+import TaskItemsForm from "./taskItemsForm";
 
 const TodoForm = (props) => {
   const form = useRef();
@@ -18,32 +19,6 @@ const TodoForm = (props) => {
 
   const onChangeTitle = (e) => {
     setTitle(e.target.value);
-  };
-
-  const onChangeTask = (e, id) => {
-    // @TODO: need it ???
-    let tks = [...tasks];
-    tks = tks.map((tk) => {
-      if (tk.id === id){
-        tk.title = e.target.value
-      }
-
-      return tk;
-    })
-
-    setTasks(tks);
-  };
-
-  const onChangeNewTask = (e, id) => {
-    // @TODO: need it ???
-    let tks = [...newTasks];
-    tks = tks.map((tk) => {
-      if (tk.id === id){
-        tk.title = e.target.value
-      }
-
-      return tk;
-    })
   };
 
   const onChangeDescription = (e) => {
@@ -65,8 +40,6 @@ const TodoForm = (props) => {
     ;
   
     (props.todo && props.todo.id) &&
-
-    
 
     api.put(
       'todos/' + props.todo.id,
@@ -184,30 +157,9 @@ const TodoForm = (props) => {
         
         <div className="h6 mt-4 mb-3 mpx-1">Tasks</div>
             <ul className="list-group">
-              {
-                tasks.map((task, i) => <li className="list-group-item" key={i+1} >
-                  <input
-                    type="text"
-                    name="tasks[]"
-                    defaultValue={task.title}
-                    onChange={(e) => onChangeTask(e, task.id)}
-                    required
-                  />
-                </li>)
-              }
+            <TaskItemsForm tasks={tasks} setTasks={setTasks} />
+            <TaskItemsForm tasks={newTasks} setTasks={setNewTasks} />
 
-              {
-                newTasks.map((task, i) => <li className="list-group-item" key={'new_' + i} >
-                  <input
-                    type="text"
-                    name="tasks[]"
-                    defaultValue={task.title}
-                    id={'new_' + i}
-                    onBlur={(e) => onChangeNewTask(e, 'new_' + i)}
-                    required
-                  />
-                </li>)
-              }
             </ul>
             <div className="my-3 mx-1">
               <div className="d-grid gap-2 d-md-flex justify-content-md-end">
