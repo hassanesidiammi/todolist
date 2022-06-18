@@ -39,7 +39,6 @@ class TodoListTest extends ApiTestCase
             'json' => [
                 'title'       => self::TODO['title'],
                 'description' => self::TODO['description'],
-                'owner'       => self::TODO['owner_path'].$user->getId()
             ]
         ]);
         $this->assertResponseStatusCodeSame(201, 'Create TodoList.');
