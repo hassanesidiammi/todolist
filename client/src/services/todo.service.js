@@ -16,5 +16,9 @@ class TodoService {
       setTodo(response.data)
     });
   }
+
+  delete(id) {
+    return api.delete('/todos/' + id);
+  }
 }
 export default new TodoService();

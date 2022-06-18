@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import todoService from "../services/todo.service";
 import Loading from "./loading";
 import TodoForm from "./todoForm";
@@ -9,6 +9,7 @@ const Todo = (props) => {
 
   const [todo, setTodo] = useState();
   const [modify, setModify] = useState(false);
+  let navigate = useNavigate();
 
   useEffect(() => {
     todoService.get(params.todoId,  setTodo)
@@ -17,6 +18,12 @@ const Todo = (props) => {
   const handleCancel = () => {
     // todoService.get(params.todoId,  setTodo);
     setModify(false);
+  }
+
+  const deleteTodo = () => {
+    todoService.delete(params.todoId);
+
+    navigate('/todos');
   }
 
   return (
@@ -38,6 +45,7 @@ const Todo = (props) => {
               }
 
               <button className="btn btn-primary me-sm-2 float-sm-end" onClick={() => setModify(1) } >Modify</button>
+              <button className="btn btn-danger me-sm-2 float-sm-end" onClick={deleteTodo} >Delete</button>
             </div>
           )
         ) : <Loading /> 
