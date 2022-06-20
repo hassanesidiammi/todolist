@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Doctrine\TodoSetOwnerListener;
 use App\Repository\TodoListRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -28,6 +30,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *         "delete"={"security"="object.getOwner() == user"},
  *     }
  * )
+ * 
+ * @ApiFilter(SearchFilter::class, properties={
+ *    "title": "partial",
+ *    "description": "partial",
+ *    "owner": "exact",
+ *    "owner.username": "partial"
+ * })
  */
 class TodoList
 {

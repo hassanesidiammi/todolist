@@ -1,0 +1,16 @@
+App\Entity\User:
+  user_{jean, luc, jack}:
+    username: <current()>
+    email: <current()>\@exemple.com
+    password: <hashPassword('password')>
+
+App\Entity\TodoList:
+  todo_{1..10}:
+    title: <text(50)>
+    description: <sentence(15, true)>
+    owner: '@user_*'
+
+App\Entity\Task:
+  task_{1..10}:
+    title: <text(70)>
+    TodoList: '@todo_*'
