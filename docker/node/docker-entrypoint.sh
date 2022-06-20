@@ -1,13 +1,12 @@
 #!/bin/sh
 
-FILE=/app/package.json
+FILE=/client/package.json
 if [ ! -f "$FILE" ]; then
-    cp -R /client/* /app
-    cd /app
+    # cp -R /client/* /app
+    cd /client
     yarn install
 fi
 
-chmod -R 777  /app
-cd /app
+# chmod -R 777  /app
 
-BROWSER=none yarn start
+cd /client && yarn install && BROWSER=none yarn start
