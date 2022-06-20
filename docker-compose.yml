@@ -3,12 +3,51 @@ version: '3'
 services:
 ###> doctrine/doctrine-bundle ###
   database:
-    image: postgres:${POSTGRES_VERSION:-13}-alpine
+    image: postgres:${POSTGRES_VERSION}-alpine
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-todo_list}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-root}
-      POSTGRES_USER: ${POSTGRES_USER:-root}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - ./docker/postgresql/data:/var/lib/postgresql/data:rw
+      - ./docker/data/postgresql/data:/var/lib/postgresql/data:rw
+    # ports:
 ###< doctrine/doctrine-bundle ###
+
+###> app/php ###
+  php:
+    build:
+      context: docker/php
+      args:
+        PHP_PROJECT_FOLDER: /var/www/${PROJECT_FOLDER}
+        PHP_VERSION: ${PHP_VERSION}
+    environment:
+      DATABASE_URL: "postgresql://root:root@database:5432/todo_list?serverVersion=13&charset=utf8"
+    volumes:
+        - ${PWD}:/var/www/${PROJECT_FOLDER}
+    links:
+        - database
+    ports:
+      - 8000:8080
+
+    working_dir: /var/www/${PROJECT_FOLDER}
+    command: bash -c "cd public && php -S php:8080"
+###< app/php ###
+
+###> app/node ###
+  node:
+      build:
+        context: docker/node
+        args:
+          IMAGE_NODE_LBEL: alpine
+      ports:
+       - ${NODE_PORT}:${NODE_PORT}
+      volumes:
+          - ./client:/client
+          - ./docker/data/node/app:/app
+      entrypoint: /docker-entrypoint.sh
+      # ports:
+      #   - 5000:5080
+
+      working_dir: /app
+      # command: bash -c "yarn start"
+###< app/node ###
