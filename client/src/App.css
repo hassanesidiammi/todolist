@@ -1,5 +1,17 @@
-.App {
-  text-align: center;
+body {
+  font-size: 14.5px;
+}
+
+#root {
+  padding: 6% 12.5%;
+}
+.app.container {
+  margin: auto;
+  float: none;
+  max-width: 800px;
+  min-height: 560px;
+  border: 1px dashed #0000ff26;
+  padding: 0;
 }
 
 .App-logo {

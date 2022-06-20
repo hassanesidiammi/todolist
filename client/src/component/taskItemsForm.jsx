@@ -27,14 +27,15 @@ const TaskItemsForm = (props) => {
       const id = task?.id ? task.id : 'new_' + i;
 
       return (
-        <li className="list-group-item" key={id} >
-          <div className="input-group">
+        <li className="list-group-item p-0 my-1" key={id} >
+          <div className="input-group  input-group-sm ">
             <input
               type="text"
               name="tasks[]"
               className="form-control"
               defaultValue={task.title}
               onChange={(e) => onChangeTask(e, id)}
+              placeholder="Title"
               required
             />
             <a className="btn btn-outline-danger" type="button" onClick={(e) => onDeleteTask(task.id)} >X</a>

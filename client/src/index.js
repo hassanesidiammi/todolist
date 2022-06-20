@@ -6,10 +6,12 @@ import reportWebVitals from './reportWebVitals';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import './App.css';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <div className="container mx-4">
+    <div className="app container mx-4 position-relative">
       <App />
     </div>
   </React.StrictMode>

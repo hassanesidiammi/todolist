@@ -27,10 +27,9 @@ const Nave = () => {
           <ul className="navbar-nav ms-auto">
             
               <li className="nav-item">
-                
                 {
                   getCurrentUser() ? (
-                    <a className="nav-link active link link-danger" onClick={logout}>Logout</a>
+                    <a className="nav-link active link-danger" onClick={logout}>Logout</a>
                   ) : (
                     <NavLink to="/login" className="nav-link">Login</NavLink>
                   )}

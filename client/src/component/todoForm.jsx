@@ -72,6 +72,7 @@ const TodoForm = (props) => {
         setLoading(false);
         setSuccessful(false);
         setMessage(resMessage);
+        setTimeout(() => {setMessage(false)}, 2000);
       }
     ) ||
     api.post(
@@ -121,14 +122,14 @@ const TodoForm = (props) => {
               </div>
             </div>
           )}
-        <div className="p-3 row">
-          <label htmlFor="title" className="col-sm-2 col-form-label">Title</label>
-          <div className="col-sm-10">
-            <div className="input-group has-validation">
+        <div className="py-2 row">
+          <div className="col-sm-12">
+            <div className="input-group  input-group-sm  has-validation">
               <input
                 type="text"
                 className={`form-control${errorTitle ? " is-invalid" : ""}`}
                 name="title"
+                placeholder="Title"
                 autoFocus
                 defaultValue={title}
                 onChange={onChangeTitle}
@@ -141,13 +142,13 @@ const TodoForm = (props) => {
           </div>
         </div>
 
-        <div className="p-3 row">
-          <label htmlFor="description" className="col-sm-2 col-form-label">Description</label>
-          <div className="col-sm-10">
+        <div className="py-2 row">
+          <div className="col-sm-12 input-group  input-group-sm  has-validation">
             <input
               type="description"
               className="form-control"
               name="description"
+              placeholder="Description"
 
               defaultValue={description}
               onChange={onChangeDescription}
@@ -155,42 +156,38 @@ const TodoForm = (props) => {
           </div>
         </div>
         
-        <div className="h6 mt-4 mb-3 mpx-1">Tasks</div>
+        <div className="h6 mt-4 mb-3 p-4 py-0">Tasks</div>
             <ul className="list-group">
-            <TaskItemsForm tasks={tasks} setTasks={setTasks} />
-            <TaskItemsForm tasks={newTasks} setTasks={setNewTasks} />
-
+              <TaskItemsForm tasks={tasks} setTasks={setTasks} />
+              <TaskItemsForm tasks={newTasks} setTasks={setNewTasks} />
             </ul>
-            <div className="my-3 mx-1">
-              <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-                <a
-                  className="btn btn-sm btn-success me-md-2"
-                  onClick={() => {
-                    let newest = [...newTasks, {title: '', id: 'new_' + newTasks.length}];
-                    setNewTasks(newest) }
-                  }
-                >Add Task</a>
-              </div>
-            </div>
 
-        <div className="py-3 row">
+        <div className="pt-4 pb-0 my-0 row">
           <div className="d-grid gap-2 d-md-flex justify-content-md-end">
-            {props.cancel ?
-              <a className="btn btn-warning me-md-2" onClick={props.cancel}>
-                <span>Cancel</span>
-              </a> :
-              ''
-            }
+            <a
+              className="btn btn-sm btn-success me-md-2"
+              onClick={() => {
+                let newest = [...newTasks, {title: '', id: 'new_' + newTasks.length}];
+                setNewTasks(newest) }
+              }
+            >Add Task</a>
+            
             <button
-              className="btn btn-primary me-md-2"
+              className="btn btn-sm btn-success me-md-2"
               disabled={loading}
               type="submit"
             >
-              <span>Save</span>
+              <span className="px-2">Save</span>
               {loading && (
                 <>&nbsp;&nbsp;<span className="spinner-border spinner-border-sm"></span></>
               )}
             </button>
+            {props.cancel ?
+              <a className="btn btn-sm btn-danger me-md-2" onClick={props.cancel}>
+                <span>Cancel</span>
+              </a> :
+              ''
+            }
           </div>
         </div>
       </Form>

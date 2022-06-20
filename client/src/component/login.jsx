@@ -65,8 +65,8 @@ const Login = () => {
             </div>
           )}
         <div className="p-3 row">
-          <label htmlFor="username" className="col-sm-2 col-form-label">Username</label>
-          <div className="col-sm-10">
+          <label htmlFor="username" className="col-sm-3 col-form-label">Username</label>
+          <div className="col-sm-9">
             <input
               type="text"
               className="form-control"
@@ -80,8 +80,8 @@ const Login = () => {
         </div>
 
         <div className="p-3 row">
-          <label htmlFor="password" className="col-sm-2 col-form-label">Password</label>
-          <div className="col-sm-10">
+          <label htmlFor="password" className="col-sm-3 col-form-label">Password</label>
+          <div className="col-sm-9">
             <input
               type="password"
               className="form-control"

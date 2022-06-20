@@ -9,6 +9,8 @@ const Todo = (props) => {
 
   const [todo, setTodo] = useState();
   const [modify, setModify] = useState(false);
+  const [message, setMessage] = useState(false);
+  const [successful, setSuccessful] = useState(false);
   let navigate = useNavigate();
 
   useEffect(() => {
@@ -21,13 +23,27 @@ const Todo = (props) => {
   }
 
   const deleteTodo = () => {
-    todoService.delete(params.todoId);
+    todoService.delete(params.todoId).then(
+      () => navigate('/todos')
+    ).catch((error) => {
+      setMessage(error.message);
+      setSuccessful(false);
 
-    navigate('/todos');
+      setTimeout(() => {setMessage(false)}, 2000);
+    })
   }
 
   return (
     <div className="container m-3">
+      {message && (
+            <div className="form-group">
+              <div
+                className={ successful ? "alert alert-success" : "alert alert-danger" } role="alert"
+              >
+                {message}
+              </div>
+            </div>
+          )}
       {
         todo ? (
           modify ? <TodoForm todo={todo} cancel={handleCancel} /> : (

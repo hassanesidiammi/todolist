@@ -18,31 +18,30 @@ const Todos = (props) => {
 
   return (
     <>
-      <ul className="list-group">
-        { props.todos.map(todo => (
-          <li key={todo.id}
-              className="list-group-item d-flex justify-content-between align-items-start">
-              <Link to={'/todos/' + todo.id}>
-                <span className="fw-bold">#{todo.id} </span>
-                {todo.title}
-              </Link>
-          </li>
+      <table className="table">
+        <tbody>
+          { props.todos.map(todo => (
+            <tr key={todo.id}>
+              <th scope="row">{todo.id}</th>
+              <td><Link to={'/todos/' + todo.id} className="h6 text-monospace text-reset text-decoration-none" ><span className="fw-bold"></span>{todo.title}</Link></td>
+              <td></td>
+            </tr>
         ))}
-          <li className="list-group-item d-flex justify-content-between align-items-start">
-            <div className="container my-2">
-              <div className="col-sm-12">{
-                addTodo ?
-                  <div className="alert alert-info alert-dismissible fade show" role="alert">
-                    <TodoForm cancel={toggleAdd} />
-                    <button type="button" className="btn-close" onClick={toggleAdd} ></button>
-                  </div>
-                 :
-                <button className="btn btn-primary me-sm-2 float-sm-end" onClick={toggleAdd} >Add TODO</button>
-              }</div>
-            </div>
-          </li>
-
-      </ul>
+        </tbody>
+      </table>
+      <div className="bottom">
+        <div className="container my-1">
+          <div className="col-sm-12">{
+            addTodo ?
+              <div className="alert alert-dismissible fade show" role="alert">
+                <TodoForm cancel={toggleAdd} />
+                <button type="button" className="btn-close btn-danger" onClick={toggleAdd} ></button>
+              </div>
+              :
+            <button className="btn btn-sm btn-success me-sm-2 float-sm-end" onClick={toggleAdd} >Add TODO</button>
+          }</div>
+        </div>
+      </div>
     </>
   )
 }
