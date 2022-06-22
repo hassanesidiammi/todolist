@@ -1,12 +1,15 @@
 import api, { logout } from "../utils/api";
+import authHeader from "./auth.service";
 
 class TodoService {
   getCollection(setTodos) {
-    api.get('/todos').then(response => {
+    // api.get('/todos', {headers: authHeader()}).then(response => {
+      api.get('/todos').then(response => {
+      
       setTodos(response.data)
     }).catch(response => {
       if (response.code === "ERR_BAD_REQUEST") {
-        logout();
+        // logout();
       }
     });
   }

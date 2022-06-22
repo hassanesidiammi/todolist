@@ -9,7 +9,7 @@ const api = axios.create({
   headers: authHeader(),
 });
 
-export const login = (username, password) => {
+export const login = (username, password, setCurrentUser) => {
   return axios
     .post(AUTH_URL, {
       username,
@@ -17,6 +17,7 @@ export const login = (username, password) => {
     })
     .then(response => {
       if (response.data.token) {
+        setCurrentUser(response.data);
         localStorage.setItem("user", JSON.stringify(response.data));
       }
 

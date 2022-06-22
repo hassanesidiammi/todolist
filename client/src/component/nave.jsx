@@ -1,12 +1,12 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { getCurrentUser } from "../services/auth.service";
+import { logout } from "../utils/api";
 
-const Nave = () => {
-  let navigate = useNavigate();
+const Nave = (props) => {
+  const navigate = useNavigate();
+
   const logout = () => {
-    localStorage.clear();
-    navigate("/");
-    window.location.reload();
+    props.handleLogout();
+    navigate('/')
   }
 
   return (
@@ -24,17 +24,18 @@ const Nave = () => {
             </li>
           </ul>
 
-          <ul className="navbar-nav ms-auto">
-            
-              <li className="nav-item">
-                {
-                  getCurrentUser() ? (
-                    <a className="nav-link active link-danger" onClick={logout}>Logout</a>
-                  ) : (
-                    <NavLink to="/login" className="nav-link">Login</NavLink>
-                  )}
-              </li>
-          </ul>
+          <div className="navbar-nav ms-auto">
+          {
+            props.currentUser &&
+
+            <div className="navbar-item" href="#">
+              <span>{props.currentUser.username}</span>&nbsp;&nbsp;
+              <a className="active" onClick={logout}>Logout</a>
+            </div> ||
+
+            <NavLink to="/login" className="nav-link">Login</NavLink>
+          }
+          </div>
         </div>
       </div>
     </nav>

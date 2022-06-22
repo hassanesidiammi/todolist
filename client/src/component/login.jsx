@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 import { FilePerson } from "react-bootstrap-icons";
 import { login } from "../utils/api";
 
-const Login = () => {
+const Login = (props) => {
   let navigate = useNavigate();
 
   const form = useRef();
@@ -30,7 +30,7 @@ const Login = () => {
     setMessage("");
     setLoading(true);
 
-    login(username, password).then(
+    login(username, password, props.setCurrentUser).then(
       () => {
         navigate("/todos");
         window.location.reload();
