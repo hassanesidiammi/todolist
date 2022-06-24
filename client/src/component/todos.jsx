@@ -30,7 +30,7 @@ const Todos = (props) => {
     }
     </div>
 
-    { props.todos && props.todos.length &&
+    { props.todos && props.todos.length ?
     <div className="col-sm-12 my-0">
     <table className="table">
       <tbody>
@@ -52,7 +52,7 @@ const Todos = (props) => {
       ))}
       </tbody>
     </table>
-    </div>
+    </div> : ''
     }
     </div>
   )

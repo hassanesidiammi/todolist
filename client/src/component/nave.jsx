@@ -1,5 +1,5 @@
+import { useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { logout } from "../utils/api";
 
 const Nave = (props) => {
   const navigate = useNavigate();
