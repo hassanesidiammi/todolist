@@ -32,7 +32,7 @@ const Login = (props) => {
 
     login(username, password, props.setCurrentUser).then(
       () => {
-        navigate("/todos");
+        navigate("/");
         window.location.reload();
       },
       (error) => {

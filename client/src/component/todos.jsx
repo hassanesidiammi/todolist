@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ListTask, Person, PersonBadge, PersonCircle, PersonFill } from "react-bootstrap-icons";
+import { ListTask, Person, PersonFill } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import todoService from "../services/todo.service";
 
@@ -17,18 +17,20 @@ const Todos = (props) => {
   }
 
   return (
-    <>
+    <div className="row">
     <div className="col-sm-12 mt-4 mb-0">
     {
       addTodo ?
         <div className="alert alert-dismissible fade show" role="alert">
-          <TodoForm cancel={toggleAdd} />
+          <TodoForm cancel={toggleAdd} setMessageBottom={props.setMessageBottom} />
           <button type="button" className="btn-close btn-danger" onClick={toggleAdd} ></button>
         </div>
       :
         <button className="btn btn-sm btn-success me-sm-2 float-sm-end" onClick={toggleAdd} >Add TODO</button>
     }
     </div>
+
+    { props.todos && props.todos.length &&
     <div className="col-sm-12 my-0">
     <table className="table">
       <tbody>
@@ -51,9 +53,8 @@ const Todos = (props) => {
       </tbody>
     </table>
     </div>
-      <div className="bottom">
-      </div>
-    </>
+    }
+    </div>
   )
 }
 

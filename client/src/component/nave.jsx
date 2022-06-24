@@ -29,7 +29,7 @@ const Nave = (props) => {
             props.currentUser &&
 
             <div className="navbar-item" href="#">
-              <span>{props.currentUser.username}</span>&nbsp;&nbsp;
+              <span className="fw-bold">{props.currentUser.username}</span>&nbsp;&nbsp;
               <a className="active" onClick={logout}>Logout</a>
             </div> ||
 

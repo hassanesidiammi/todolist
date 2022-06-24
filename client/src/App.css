@@ -3,15 +3,33 @@ body {
 }
 
 #root {
-  padding: 6% 12.5%;
+  background-image: url(../public/logo_company.png);
+  background-repeat: no-repeat;
+  background-position: center top 2%;
+  background-size: 580px auto;
+  position: relative;
+  padding: 10% 25%;
+  margin: 0;
 }
 .app.container {
-  margin: auto;
+  position: relative;
   float: none;
+  width: 100%;
   max-width: 800px;
   min-height: 560px;
   border: 1px dashed #0000ff26;
   padding: 0;
+}
+
+.app.container .btn-success {
+  color: #fff;
+  background-color: #47b5af;
+  border-color: #47b5af;
+}
+
+.app.container a {
+  color: #112e5c;
+  cursor: pointer;
 }
 
 .App-logo {

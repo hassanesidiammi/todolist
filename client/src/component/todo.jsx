@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { getCurrentUser } from "../services/auth.service";
 import todoService from "../services/todo.service";
 import Loading from "./loading";
 import TodoForm from "./todoForm";
@@ -14,7 +15,24 @@ const Todo = (props) => {
   let navigate = useNavigate();
 
   useEffect(() => {
-    todoService.get(params.todoId,  setTodo)
+    todoService.get(params.todoId,  setTodo).then(response => {
+      props.setMessageBottom(
+        response.data.owner.id === getCurrentUser().id ?
+        {
+          type: 'success',
+          message: 'You can modify/dele this todo'
+        }:
+        {
+          type: 'danger',
+          message: 'You cannot modify/dele this todo!'
+        }
+      );
+
+      return function () {
+        alert('Unmount!')
+        props.setMessageBottom({})
+      };
+    })
   }, []);
 
   const handleCancel = () => {
@@ -60,8 +78,10 @@ const Todo = (props) => {
                 : ''
               }
 
-              <button className="btn btn-primary me-sm-2 float-sm-end" onClick={() => setModify(1) } >Modify</button>
-              <button className="btn btn-danger me-sm-2 float-sm-end" onClick={deleteTodo} >Delete</button>
+              <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                <button className="btn btn-sm btn-success me-sm-2 float-sm-end" onClick={() => setModify(1) } >Modify</button>
+                <button className="btn btn-sm btn-danger me-sm-2 float-sm-end" onClick={deleteTodo} >Delete</button>
+              </div>
             </div>
           )
         ) : <Loading /> 
