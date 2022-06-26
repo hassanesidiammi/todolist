@@ -7,16 +7,18 @@ import UserForm from "./userForm";
 const Users = (props) => {
   useEffect(() => {
     userService.getCollection(props.setUsers)
-  })
 
-  const toggleAdd = () => console.log('toggleAdd');;
+    props.setMessageBar({})
+  }, [])
+
+  const toggleAdd = () => console.log('toggleAdd');
   return (
     <div className="row">
       <div className="col-sm-12 mb-0 mt-4 mx-0">
       {
         false ?
           <div className="alert alert-dismissible fade show" role="alert">
-            <UserForm cancel={toggleAdd} setMessageBottom={props.setMessageBottom} />
+            <UserForm cancel={toggleAdd} setMessageBar={props.setMessageBar} />
             <button type="button" className="btn-close btn-danger" onClick={toggleAdd} ></button>
           </div>
         :
@@ -26,7 +28,7 @@ const Users = (props) => {
       <div className="col-sm-12 my-0">
       
       {
-        props.users && props.users.length && props.users.length > 0 ?
+        props.users?.length ?
         <table className="table">
           <tbody>
           {props.users.map((user) =>

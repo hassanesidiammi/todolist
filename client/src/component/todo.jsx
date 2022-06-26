@@ -8,35 +8,35 @@ import TodoForm from "./todoForm";
 const Todo = (props) => {
   const params = useParams();
 
-  const [todo, setTodo] = useState();
+  const [todo, setTodo] = useState(null);
   const [modify, setModify] = useState(false);
   const [message, setMessage] = useState(false);
   const [successful, setSuccessful] = useState(false);
   let navigate = useNavigate();
 
   useEffect(() => {
-    todoService.get(params.todoId,  setTodo).then(response => {
-      props.setMessageBottom(
-        response.data.owner.id === getCurrentUser().id ?
-        {
-          type: 'success',
-          message: 'You can modify/dele this todo'
-        }:
-        {
-          type: 'danger',
-          message: 'You cannot modify/dele this todo!'
+    if (!todo) {
+      todoService.get(params.todoId,  setTodo).then(response => {
+        if (response) {
+          props.setMessageBar(
+            response?.data?.owner.id === getCurrentUser().id ?
+            {
+              type: 'success',
+              message: 'You can modify/delete this todo'
+            }:
+            {
+              type: 'danger',
+              message: 'You cannot modify/delete this todo!'
+            }
+          )
         }
-      );
+      })
+    }
+  })
 
-      return function () {
-        alert('Unmount!')
-        props.setMessageBottom({})
-      };
-    })
-  }, []);
 
   const handleCancel = () => {
-    // todoService.get(params.todoId,  setTodo);
+    todoService.get(params.todoId,  setTodo);
     setModify(false);
   }
 
@@ -63,7 +63,7 @@ const Todo = (props) => {
             </div>
           )}
       {
-        todo ? (
+        todo?.id ? (
           modify ? <TodoForm todo={todo} cancel={handleCancel} /> : (
             <div className="offset-sm-1 col-sm-10">
               <div className="h3 text-center">#{todo.id} {todo.title}</div>

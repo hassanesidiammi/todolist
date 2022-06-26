@@ -27,6 +27,12 @@ body {
   border-color: #47b5af;
 }
 
+.app.container .alert-success {
+  color: #0f5132;
+  background-color: #48b8af78;
+  border-color: #48b8af78;
+}
+
 .app.container a {
   color: #112e5c;
   cursor: pointer;
