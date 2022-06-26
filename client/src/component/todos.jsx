@@ -10,6 +10,7 @@ const Todos = (props) => {
 
   useEffect(() => {
     todoService.getCollection(props.setTodos)
+    props.setMessageBar({})
   }, []);
 
   const toggleAdd =  () => {
@@ -22,7 +23,7 @@ const Todos = (props) => {
     {
       addTodo ?
         <div className="alert alert-dismissible fade show" role="alert">
-          <TodoForm cancel={toggleAdd} setMessageBottom={props.setMessageBottom} />
+          <TodoForm cancel={toggleAdd} setMessageBar={props.setMessageBar} />
           <button type="button" className="btn-close btn-danger" onClick={toggleAdd} ></button>
         </div>
       :

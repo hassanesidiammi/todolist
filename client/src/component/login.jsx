@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import Form from "react-bootstrap/Form";
 import { FilePerson } from "react-bootstrap-icons";
 import { login } from "../utils/api";
+import { useEffect } from "react";
+import { getCurrentUser } from "../services/auth.service";
 
 const Login = (props) => {
   let navigate = useNavigate();
@@ -48,6 +50,13 @@ const Login = (props) => {
       }
     );
   };
+
+  useEffect(() => {
+    props.setMessageBar({})
+    if(!getCurrentUser()) {
+      props.setCurrentUser(false)
+    }
+  }, [])
 
   return (
     <div className="card card-container offset-sm-3 col-sm-6  row my-3 pb-3">
